@@ -1,4 +1,8 @@
+"use client"
+
 import { Chatbot } from "@/components/component/chatbot";
+import { useState, useEffect } from 'react';
+import { checkServerHealth } from '../lib/serverCheck';
 
 export default function Home() {
   return (
@@ -6,4 +10,21 @@ export default function Home() {
       <Chatbot />
     </main>
   );
+}
+
+export function ChatComponent() {
+  const [isServerReady, setIsServerReady] = useState(false);
+
+  useEffect(() => {
+    async function checkServer() {
+      const isHealthy = await checkServerHealth();
+      setIsServerReady(isHealthy);
+    }
+    checkServer();
+  }, []);
+
+  if (!isServerReady) {
+    return <div>Loading... Please wait while we connect to the server.</div>;
+  }
+
 }
